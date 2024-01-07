@@ -1,12 +1,11 @@
 package main
 
 import (
+	"github.com/gin-gonic/gin"
+	_ "github.com/heroku/x/hmetrics/onload"
 	"log"
 	"net/http"
 	"os"
-
-	"github.com/gin-gonic/gin"
-	_ "github.com/heroku/x/hmetrics/onload"
 )
 
 func main() {
@@ -22,8 +21,14 @@ func main() {
 	router.Static("/static", "static")
 
 	router.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.tmpl.html", nil)
+		c.JSON(http.StatusOK, "Hello, this is the test endpoint!")
 	})
+
+	router.GET("/calculate/:id", CalculatePackages)
+
+	router.GET("/rollback", RollbackPackageChanges)
+	router.GET("/add/:id", AddNewPackages)
+	router.GET("/remove/:id", RemovePackages)
 
 	router.Run(":" + port)
 }
